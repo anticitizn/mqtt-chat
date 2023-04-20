@@ -10,7 +10,7 @@ broker_address = "10.50.12.150"
 broker_port = 1883
 
 input_message = ""
-messages = []
+messages = ""
 
 username = "Haxor1337"
 user_id = str(uuid.uuid4())
@@ -32,10 +32,11 @@ def on_connect(client, userdata, flags, rc):
 
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
+    global messages
     try:
         parsed = json.loads(msg.payload)
         print(parsed)
-        messages.append(parsed['text'])
+        messages += '\n' + parsed['sender'] + '\n' + parsed['text'] + '\n'
 
         dpg.set_value("input", messages)
         print('message received!')
@@ -54,9 +55,6 @@ client.loop_start()
 dpg.create_context()
 dpg.create_viewport(title='MQTT chat!', width=800, height=600)
 
-text1 = 'The lazy dong is a good dog. This paragraph should fit within the child. Testing a 1 character word. The quick brown fox jumps over the lazy dog.'
-messages.append(text1)
-
 def input_edited(sender, app_data):
     global input_message
     input_message = app_data
@@ -66,16 +64,21 @@ def btn_clicked(sender, app_data):
     message_data = json.dumps(message)
     client.publish("/aichat/" + topic, message_data)
 
-with dpg.window(label="Example Window"):
-    dpg.add_text(wrap=600, tag="input")
-    dpg.add_spacer(height=5)
-    with dpg.group(horizontal=True):
-        dpg.add_input_text(hint="Enter message here...", callback=input_edited, width=500)
-        dpg.add_button(label="Send", callback=btn_clicked, width = 80)
+with dpg.window(tag="Primary Window", width=800, height=600):
+    with dpg.child_window(tag="messages_display", height=530):
+        dpg.add_text(wrap=750, tag="input")
+        dpg.add_spacer(height=5)
+    
+    with dpg.child_window(tag="message_input",height=40):
+        with dpg.group(horizontal=True):
+            dpg.add_input_text(hint="Enter message here...", callback=input_edited, width=670)
+            dpg.add_button(label="Send", callback=btn_clicked, width = 80)
 
 #demo.show_demo()
 
 dpg.setup_dearpygui()
 dpg.show_viewport()
+dpg.set_primary_window("Primary Window", True)
 dpg.start_dearpygui()
+
 dpg.destroy_context()
