@@ -21,10 +21,10 @@ def printWeatherData(jsonData):
 def on_message(client, userdata, msg):
     try:
         parsed = json.loads(msg.payload)
-        printWeatherData(parsed)
+        printWeatherData(parsed["text"])
         
     except ValueError:
-        print("Malformed Weather Data encounterd")
+        print("Malformed weather data encountered")
     
 
 client = mqtt.Client()
