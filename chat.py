@@ -40,7 +40,7 @@ def on_message(client, userdata, msg):
     global messages
     try:
         parsed = json.loads(msg.payload)
-        messages += '\n' + parsed['sender'] + '\n' + parsed['text'] + '\n'
+        messages += '\n' + parsed['sender'] + " - /aichat/" + parsed['topic'] + '\n' + parsed['text'] + '\n'
 
         dpg.set_value("input", messages)
         
