@@ -26,6 +26,15 @@ def on_connect(client, userdata, flags, rc):
     # reconnect then subscriptions will be renewed.
     client.subscribe("/aichat/#")
 
+    # Send a clientstate message to let everyone know we're online
+    message["sender"] = username
+    message["clientId"] = client_id
+    message["topic"] = "clienstate"
+    message["text"] = "Client " + client_id + " connected."
+    message_data = json.dumps(message)
+    
+    client.publish("/aichat/clientstate", message_data)
+
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
     global messages
@@ -55,6 +64,7 @@ def send_message():
     message["topic"] = dpg.get_value("topic_input")
     message["text"] = dpg.get_value("message_input")
     message_data = json.dumps(message)
+
     client.publish("/aichat/" + topic, message_data)
 
     dpg.set_value("message_input", "")
