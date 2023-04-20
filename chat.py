@@ -49,23 +49,11 @@ client.loop_start()
 dpg.create_context()
 dpg.create_viewport(title='MQTT chat!', width=800, height=600)
 
-def username_input_edited(sender, app_data):
-    global username
-    username = app_data
-
-def topic_input_edited(sender, app_data):
-    global topic
-    topic = app_data
-
-def input_edited(sender, app_data):
-    global input_message
-    input_message = app_data
-
-def btn_clicked(sender, app_data):
-    message["sender"] = username
-    message["clientId"] = client_id
-    message["topic"] = topic
-    message["text"] = input_message
+def message_send(sender, app_data):
+    message["sender"] = dpg.get_value("username_input")
+    message["clientId"] = dpg.get_value("client_id_input")
+    message["topic"] = dpg.get_value("topic_input")
+    message["text"] = dpg.get_value("message_input")
     message_data = json.dumps(message)
     client.publish("/aichat/" + topic, message_data)
 
@@ -75,10 +63,10 @@ with dpg.window(tag="primary_window", width=800, height=600):
     with dpg.child_window(tag="metadata_inputs", autosize_x=True, height=40):
         with dpg.group(horizontal=True):
             dpg.add_text("Username:")
-            dpg.add_input_text(tag="username_input", default_value=username, callback=username_input_edited, width=120)
+            dpg.add_input_text(tag="username_input", default_value=username, width=120)
 
             dpg.add_text("Topic:")
-            dpg.add_input_text(tag="topic_input", default_value=topic, callback=topic_input_edited, width=120)
+            dpg.add_input_text(tag="topic_input", default_value=topic, width=120)
 
             dpg.add_text("Client ID:")
             dpg.add_input_text(tag="client_id_input", default_value=client_id, width=280, enabled=False)
@@ -89,8 +77,8 @@ with dpg.window(tag="primary_window", width=800, height=600):
     
     with dpg.child_window(tag="message_inputs", height=40, autosize_x=True):
         with dpg.group(horizontal=True):
-            dpg.add_input_text(hint="Enter message here...", tag="message_input", callback=input_edited, width=-100)
-            dpg.add_button(label="Send", callback=btn_clicked, width = 80)
+            dpg.add_input_text(hint="Enter message here...", tag="message_input", on_enter=True, callback=message_send, width=-100)
+            dpg.add_button(label="Send", callback=message_send, width = 80)
 
 #demo.show_demo()
 
