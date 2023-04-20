@@ -69,6 +69,8 @@ def btn_clicked(sender, app_data):
     message_data = json.dumps(message)
     client.publish("/aichat/" + topic, message_data)
 
+    dpg.set_value("message_input", "")
+
 with dpg.window(tag="primary_window", width=800, height=600):
     with dpg.child_window(tag="metadata_inputs", autosize_x=True, height=40):
         with dpg.group(horizontal=True):
@@ -85,9 +87,9 @@ with dpg.window(tag="primary_window", width=800, height=600):
         dpg.add_text(wrap=750, tag="input")
         dpg.add_spacer(height=5)
     
-    with dpg.child_window(tag="message_input", height=40, autosize_x=True):
+    with dpg.child_window(tag="message_inputs", height=40, autosize_x=True):
         with dpg.group(horizontal=True):
-            dpg.add_input_text(hint="Enter message here...", callback=input_edited, width=-100)
+            dpg.add_input_text(hint="Enter message here...", tag="message_input", callback=input_edited, width=-100)
             dpg.add_button(label="Send", callback=btn_clicked, width = 80)
 
 #demo.show_demo()
