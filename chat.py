@@ -31,11 +31,9 @@ def on_message(client, userdata, msg):
     global messages
     try:
         parsed = json.loads(msg.payload)
-        print(parsed)
         messages += '\n' + parsed['sender'] + '\n' + parsed['text'] + '\n'
 
         dpg.set_value("input", messages)
-        print('message received!')
         
     except (ValueError, KeyError) as e:
         print("Malformed data encountered")
@@ -76,8 +74,10 @@ with dpg.window(tag="primary_window", width=800, height=600):
         with dpg.group(horizontal=True):
             dpg.add_text("Username:")
             dpg.add_input_text(tag="username_input", default_value=username, callback=username_input_edited, width=120)
+
             dpg.add_text("Topic:")
             dpg.add_input_text(tag="topic_input", default_value=topic, callback=topic_input_edited, width=120)
+
             dpg.add_text("Client ID:")
             dpg.add_input_text(tag="client_id_input", default_value=client_id, width=280, enabled=False)
 
