@@ -3,6 +3,7 @@ import dearpygui.dearpygui as dpg
 import dearpygui.demo as demo
 
 import json
+import uuid
 
 # Broker connection information
 broker_address = "10.50.12.150"
@@ -10,6 +11,16 @@ broker_port = 1883
 
 input_message = ""
 messages = []
+
+username = "Haxor1337"
+user_id = str(uuid.uuid4())
+topic = "default"
+
+message = {}
+message["sender"] = username
+message["clientId"] = user_id
+message["topic"] = topic
+message["text"] = ""
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
@@ -51,7 +62,9 @@ def input_edited(sender, app_data):
     input_message = app_data
 
 def btn_clicked(sender, app_data):
-    client.publish("/aichat", input_message)
+    message["text"] = input_message
+    message_data = json.dumps(message)
+    client.publish("/aichat/" + topic, message_data)
 
 with dpg.window(label="Example Window"):
     dpg.add_text(wrap=600, tag="input")
