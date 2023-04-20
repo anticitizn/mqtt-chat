@@ -10,19 +10,19 @@ def on_connect(client, userdata, flags, rc):
     # reconnect then subscriptions will be renewed.
     client.subscribe("/weather/#")
 
+def printWeatherData(jsonData):
+    print(f'Current Temperature : {jsonData["tempCurrent"]}')
+    print(f'Max Temperature : {jsonData["tempMax"]}')
+    print(f'Min Temperature : {jsonData["tempMin"]}')
+    print(f'Timestamp : {parser.parse(jsonData["timeStamp"]).strftime("%d.%m.%Y %H:%M")}')
+    print(f'City: {jsonData["city"]}\n')
+
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
     try:
         parsed = json.loads(msg.payload)
-       
-        print(f'Current Temperature : {parsed["tempCurrent"]}')
-        print(f'Max Temperature : {parsed["tempMax"]}')
-        print(f'Min Temperature : {parsed["tempMin"]}')
-        #YYYY-MM-DDTHH:mm:ss.sssZ
-        print(f'Timestamp : {parser.parse(parsed["timeStamp"]).strftime("%d.%m.%Y %H:%M")}')
-        print(f'City: {parsed["city"]}\n')
-
-        #print(json.dumps(parsed, indent=3))
+        printWeatherData(parsed)
+        
     except ValueError:
         print("Malformed Weather Data encounterd")
     
