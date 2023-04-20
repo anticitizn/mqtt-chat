@@ -49,7 +49,7 @@ client.loop_start()
 dpg.create_context()
 dpg.create_viewport(title='MQTT chat!', width=800, height=600)
 
-def message_send(sender, app_data):
+def send_message():
     message["sender"] = dpg.get_value("username_input")
     message["clientId"] = dpg.get_value("client_id_input")
     message["topic"] = dpg.get_value("topic_input")
@@ -77,8 +77,8 @@ with dpg.window(tag="primary_window", width=800, height=600):
     
     with dpg.child_window(tag="message_inputs", height=40, autosize_x=True):
         with dpg.group(horizontal=True):
-            dpg.add_input_text(hint="Enter message here...", tag="message_input", on_enter=True, callback=message_send, width=-100)
-            dpg.add_button(label="Send", callback=message_send, width = 80)
+            dpg.add_input_text(hint="Enter message here...", tag="message_input", on_enter=True, callback=send_message, width=-100)
+            dpg.add_button(label="Send", callback=send_message, width = 80)
 
 #demo.show_demo()
 
