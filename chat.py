@@ -12,15 +12,11 @@ broker_port = 1883
 input_message = ""
 messages = ""
 
-username = "Haxor1337"
-user_id = str(uuid.uuid4())
+username = "Haxor"
+client_id = str(uuid.uuid4())
 topic = "default"
 
 message = {}
-message["sender"] = username
-message["clientId"] = user_id
-message["topic"] = topic
-message["text"] = ""
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
@@ -55,30 +51,50 @@ client.loop_start()
 dpg.create_context()
 dpg.create_viewport(title='MQTT chat!', width=800, height=600)
 
+def username_input_edited(sender, app_data):
+    global username
+    username = app_data
+
+def topic_input_edited(sender, app_data):
+    global topic
+    topic = app_data
+
 def input_edited(sender, app_data):
     global input_message
     input_message = app_data
 
 def btn_clicked(sender, app_data):
+    message["sender"] = username
+    message["clientId"] = client_id
+    message["topic"] = topic
     message["text"] = input_message
     message_data = json.dumps(message)
     client.publish("/aichat/" + topic, message_data)
 
-with dpg.window(tag="Primary Window", width=800, height=600):
-    with dpg.child_window(tag="messages_display", height=530):
+with dpg.window(tag="primary_window", width=800, height=600):
+    with dpg.child_window(tag="metadata_inputs", autosize_x=True, height=40):
+        with dpg.group(horizontal=True):
+            dpg.add_text("Username:")
+            dpg.add_input_text(tag="username_input", default_value=username, callback=username_input_edited, width=120)
+            dpg.add_text("Topic:")
+            dpg.add_input_text(tag="topic_input", default_value=topic, callback=topic_input_edited, width=120)
+            dpg.add_text("Client ID:")
+            dpg.add_input_text(tag="client_id_input", default_value=client_id, width=280, enabled=False)
+
+    with dpg.child_window(tag="messages_display", autosize_x=True, height=490):
         dpg.add_text(wrap=750, tag="input")
         dpg.add_spacer(height=5)
     
-    with dpg.child_window(tag="message_input",height=40):
+    with dpg.child_window(tag="message_input", height=40, autosize_x=True):
         with dpg.group(horizontal=True):
-            dpg.add_input_text(hint="Enter message here...", callback=input_edited, width=670)
+            dpg.add_input_text(hint="Enter message here...", callback=input_edited, width=-100)
             dpg.add_button(label="Send", callback=btn_clicked, width = 80)
 
 #demo.show_demo()
 
 dpg.setup_dearpygui()
 dpg.show_viewport()
-dpg.set_primary_window("Primary Window", True)
+dpg.set_primary_window("primary_window", True)
 dpg.start_dearpygui()
 
 dpg.destroy_context()
