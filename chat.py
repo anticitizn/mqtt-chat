@@ -69,6 +69,17 @@ def send_message():
 
     dpg.set_value("message_input", "")
 
+with dpg.font_registry():
+    with dpg.font("UbuntuMono-Regular.ttf", 13) as default_font:
+
+        # add the default font range
+        dpg.add_font_range_hint(dpg.mvFontRangeHint_Default)
+        dpg.add_font_range_hint(dpg.mvFontRangeHint_Cyrillic)
+        dpg.add_font_range_hint(dpg.mvFontRangeHint_Japanese)
+        dpg.add_font_range_hint(dpg.mvFontRangeHint_Chinese_Full)
+
+        dpg.bind_font(default_font)
+
 with dpg.window(tag="primary_window", width=800, height=600):
     with dpg.child_window(tag="metadata_inputs", autosize_x=True, height=40):
         with dpg.group(horizontal=True):
@@ -91,6 +102,7 @@ with dpg.window(tag="primary_window", width=800, height=600):
             dpg.add_button(label="Send", callback=send_message, width = 80)
 
 #demo.show_demo()
+#dpg.show_font_manager()
 
 dpg.setup_dearpygui()
 dpg.show_viewport()
