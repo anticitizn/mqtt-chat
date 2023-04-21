@@ -56,7 +56,7 @@ client.connect(broker_address, broker_port)
 client.loop_start()
 
 dpg.create_context()
-dpg.create_viewport(title='MQTT chat!', width=800, height=600)
+dpg.create_viewport(title='MQTT chat!', width=1000, height=800)
 
 def send_message():
     message["sender"] = dpg.get_value("username_input")
@@ -70,7 +70,7 @@ def send_message():
     dpg.set_value("message_input", "")
 
 with dpg.font_registry():
-    with dpg.font("UbuntuMono-Regular.ttf", 13) as default_font:
+    with dpg.font("unifont.otf", 16) as default_font:
 
         # add the default font range
         dpg.add_font_range_hint(dpg.mvFontRangeHint_Default)
@@ -80,19 +80,19 @@ with dpg.font_registry():
 
         dpg.bind_font(default_font)
 
-with dpg.window(tag="primary_window", width=800, height=600):
+with dpg.window(tag="primary_window", width=1000, height=800):
     with dpg.child_window(tag="metadata_inputs", autosize_x=True, height=40):
         with dpg.group(horizontal=True):
             dpg.add_text("Username:")
-            dpg.add_input_text(tag="username_input", default_value=username, width=120)
+            dpg.add_input_text(tag="username_input", default_value=username, width=150)
 
             dpg.add_text("Topic:")
-            dpg.add_input_text(tag="topic_input", default_value=topic, width=120)
+            dpg.add_input_text(tag="topic_input", default_value=topic, width=150)
 
             dpg.add_text("Client ID:")
-            dpg.add_input_text(tag="client_id_input", default_value=client_id, width=280, enabled=False)
+            dpg.add_input_text(tag="client_id_input", default_value=client_id, width=320, enabled=False)
 
-    with dpg.child_window(tag="messages_display", autosize_x=True, height=490):
+    with dpg.child_window(tag="messages_display", autosize_x=True, height=690):
         dpg.add_text(wrap=750, tag="input")
         dpg.add_spacer(height=5)
     
