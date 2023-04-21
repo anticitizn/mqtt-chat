@@ -52,6 +52,14 @@ client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
 
+message["sender"] = username
+message["clientId"] = client_id
+message["topic"] = "clienstate"
+message["text"] = "Client " + client_id + " unexpectedly lost connection."
+message_data = json.dumps(message)
+
+client.will_set("/aichat/clientstate", message_data, 0, False)
+
 client.connect(broker_address, broker_port)
 
 client.loop_start()
@@ -116,5 +124,8 @@ dpg.setup_dearpygui()
 dpg.show_viewport()
 dpg.set_primary_window("primary_window", True)
 dpg.start_dearpygui()
+
+client.disconnect()
+client.loop_stop()
 
 dpg.destroy_context()
