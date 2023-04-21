@@ -12,6 +12,7 @@ broker_port = 1883
 input_message = ""
 messages = ""
 
+# Default values, can be modified within the application
 username = "Haxor"
 client_id = str(uuid.uuid4())
 topic = "default"
@@ -72,15 +73,20 @@ def send_message():
 with dpg.font_registry():
     with dpg.font("unifont.otf", 16) as default_font:
 
-        # add the default font range
+        # Add the default and extended font ranges
         dpg.add_font_range_hint(dpg.mvFontRangeHint_Default)
         dpg.add_font_range_hint(dpg.mvFontRangeHint_Cyrillic)
         dpg.add_font_range_hint(dpg.mvFontRangeHint_Japanese)
-        dpg.add_font_range_hint(dpg.mvFontRangeHint_Chinese_Full)
+        dpg.add_font_range_hint(dpg.mvFontRangeHint_Thai)
+        dpg.add_font_range_hint(dpg.mvFontRangeHint_Vietnamese)
+        dpg.add_font_range_hint(dpg.mvFontRangeHint_Korean)
+        dpg.add_font_range_hint(dpg.mvFontRangeHint_Chinese_Full) # bing chilling
 
         dpg.bind_font(default_font)
 
 with dpg.window(tag="primary_window", width=1000, height=800):
+
+    # Input fields for metadata (username, topic, clientId)
     with dpg.child_window(tag="metadata_inputs", autosize_x=True, height=40):
         with dpg.group(horizontal=True):
             dpg.add_text("Username:")
@@ -92,10 +98,12 @@ with dpg.window(tag="primary_window", width=1000, height=800):
             dpg.add_text("Client ID:")
             dpg.add_input_text(tag="client_id_input", default_value=client_id, width=320, enabled=False)
 
+    # Message history display
     with dpg.child_window(tag="messages_display", autosize_x=True, height=690):
         dpg.add_text(wrap=750, tag="input")
         dpg.add_spacer(height=5)
-    
+
+    # Message input field
     with dpg.child_window(tag="message_inputs", height=40, autosize_x=True):
         with dpg.group(horizontal=True):
             dpg.add_input_text(hint="Enter message here...", tag="message_input", on_enter=True, callback=send_message, width=-100)
