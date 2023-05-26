@@ -21,7 +21,7 @@ def printWeatherData(jsonData):
 def on_message(client, userdata, msg):
     try:
         parsed = json.loads(msg.payload)
-        printWeatherData(parsed["text"])
+        printWeatherData(parsed)
         
     except ValueError:
         print("Malformed weather data encountered")
