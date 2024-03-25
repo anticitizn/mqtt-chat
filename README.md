@@ -1,4 +1,4 @@
-![MQTT chat client creenshot](https://cdn.discordapp.com/attachments/663174968791662594/1098979162183712789/image.png)
+![MQTT chat client creenshot](https://raw.githubusercontent.com/DataExplorerUser/dpg_resources/main/mqtt_chat.png)
 # Instructions
 ```
 pip install -r requirements.txt
